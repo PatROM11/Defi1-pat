@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les défis de Pat : Affirmations</title>
+    <title>defi1-PAT : Affirmations</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Press+Start+2P&display=swap');
+
+        :root {
+            --neon-cyan: #00f2ff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #bc13fe;
+            --bg-dark: #050510;
+        }
 
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -15,109 +22,135 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            background: radial-gradient(circle at center, #1b1b3a 0%, #050510 100%);
+            background: var(--bg-dark);
+            background-image: 
+                linear-gradient(transparent 0%, rgba(188, 19, 254, 0.1) 2%, transparent 5%),
+                linear-gradient(90deg, transparent 0%, rgba(188, 19, 254, 0.1) 2%, transparent 5%);
+            background-size: 50px 50px;
             color: white;
             overflow-x: hidden;
         }
 
-        .header-container { text-align: center; margin-bottom: 10px; padding: 0 10px; }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, var(--neon-purple) 150%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header-container { text-align: center; margin-bottom: 20px; }
         .retro-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(1.2rem, 5vw, 1.8rem);
             font-weight: 900;
             text-transform: uppercase;
-            color: white;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
             letter-spacing: 3px;
-            margin: 0;
             font-style: italic;
         }
-        .name-highlight { color: #00d2ff; text-shadow: 0 0 10px #00d2ff; }
+        .name-highlight { color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
 
         #game-container {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            background: rgba(10, 10, 30, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 15px rgba(0, 242, 255, 0.2);
             text-align: center;
             width: 90%;
-            max-width: 380px;
-            color: #1a1a2e;
+            max-width: 400px;
             position: relative;
         }
 
         #timer-display {
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: -15px;
+            right: 20px;
             font-family: 'Press Start 2P';
-            font-size: 0.6rem;
-            color: #d63031;
+            font-size: 0.7rem;
+            color: var(--neon-pink);
+            background: var(--bg-dark);
+            padding: 5px 10px;
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
         }
 
-        .shape { width: 80px; height: 80px; margin: 10px auto; border: 2px solid rgba(0,0,0,0.1); }
-        .square { border-radius: 2px; }
+        .shape { width: 90px; height: 90px; margin: 15px auto; border: 3px solid rgba(255,255,255,0.8); box-shadow: 0 0 15px white; }
+        .square { border-radius: 4px; }
         .circle { border-radius: 50%; }
 
-        #statement-container { min-height: 60px; font-size: 1rem; font-weight: 500; margin: 10px 0; }
-        .color-text { font-weight: 900; text-transform: uppercase; }
-
-        #btn-wrapper { display: flex; gap: 15px; width: 100%; }
-        button {
-            flex: 1; padding: 12px; font-size: 0.8rem; font-weight: bold;
-            cursor: pointer; border: none; border-radius: 5px; color: white;
-            font-family: 'Orbitron'; transition: 0.1s;
+        #statement-container { 
+            min-height: 80px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            margin: 20px 0;
+            font-family: 'Orbitron';
+            color: #fff;
         }
-        .btn-true { background: #00b894; box-shadow: 0 4px #008a6e; }
-        .btn-false { background: #d63031; box-shadow: 0 4px #b32424; }
-        .btn-hof { background: #fdcb6e; color: #1a1a2e; margin-bottom: 15px; width: 200px; box-shadow: 0 4px #e17055;}
+        .color-text { text-shadow: 0 0 5px currentColor; }
+
+        #btn-wrapper { display: flex; gap: 20px; width: 100%; }
+        button {
+            flex: 1; padding: 15px; font-size: 0.9rem; font-weight: 900;
+            cursor: pointer; border: 2px solid white; border-radius: 8px; color: white;
+            font-family: 'Orbitron'; transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-true { background: transparent; border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px #00ff41; }
+        .btn-false { background: transparent; border-color: #ff003c; color: #ff003c; box-shadow: 0 0 10px #ff003c; }
+
+        .btn-hof { 
+            background: transparent; border-color: var(--neon-purple); color: var(--neon-purple);
+            margin-bottom: 25px; width: 240px; box-shadow: 0 0 10px var(--neon-purple);
+        }
 
         #score-board { 
-            margin-top: 20px; font-family: 'Press Start 2P';
-            font-size: 0.7rem; color: #f0f; text-shadow: 0 0 5px #f0f;
+            margin-top: 25px; font-family: 'Press Start 2P';
+            font-size: 0.8rem; color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan);
         }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; z-index: 100;
-            padding: 10px;
+            background: rgba(0, 0, 0, 0.95); justify-content: center; align-items: center; z-index: 100;
         }
         .modal-content {
-            background: white; padding: 20px; border-radius: 5px;
-            text-align: center; width: 100%; max-width: 380px; color: #1a1a2e; border: 3px solid #f0f;
-            max-height: 95vh; overflow-y: auto;
+            background: #0a0a1e; padding: 30px; border-radius: 10px;
+            text-align: center; width: 90%; max-width: 400px; color: white; 
+            border: 4px solid var(--neon-pink); box-shadow: 0 0 30px var(--neon-pink);
+            max-height: 90vh; overflow-y: auto;
         }
 
-        /* Style Rappel Erreur */
-        .recall-box {
-            background: #f8f9fa; border: 1px dashed #ccc; padding: 10px; margin: 10px 0; border-radius: 5px;
-        }
-        .error-logic { color: #d63031; font-weight: bold; font-size: 0.85rem; margin-top: 5px; }
+        .recall-box { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-cyan); padding: 15px; margin: 15px 0; border-radius: 8px; }
+        .error-logic { color: #ff003c; font-weight: bold; font-family: 'Orbitron'; margin-top: 10px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
-        th { border-bottom: 2px solid #7000ff; padding: 8px 4px; font-family: 'Orbitron'; }
-        td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { color: var(--neon-cyan); border-bottom: 2px solid var(--neon-cyan); padding: 10px; font-family: 'Orbitron'; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-family: 'Press Start 2P', cursive; font-size: 0.6rem; }
 
         input[type="text"] {
-            width: 80%; padding: 10px; margin: 10px 0;
-            border: 2px solid #0984e3; border-radius: 5px;
-            font-family: 'Orbitron'; text-align: center; font-size: 1rem;
+            width: 80%; padding: 12px; margin: 15px 0;
+            background: #000; border: 2px solid var(--neon-cyan); color: var(--neon-cyan);
+            border-radius: 5px; font-family: 'Orbitron'; text-align: center; font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
 
     <div class="header-container">
-        <h1 class="retro-title">Les défis de <span class="name-highlight">Pat</span> : Affirmations</h1>
+        <h1 class="retro-title">defi1-PAT : <span class="name-highlight">Affirmations</span></h1>
     </div>
 
-    <button class="btn-hof" onclick="showHOF()">🏆 HALL OF FAME</button>
+    <button class="btn-hof" onclick="showHOF()">🏆 CLASSEMENT</button>
 
     <div id="game-container">
-        <div id="timer-display">0s</div>
+        <div id="timer-display">00s</div>
         <div id="shape-display"><div id="target-shape" class="shape"></div></div>
         <div id="statement-container">
-            <div id="line1">Prêt ?</div>
-            <div id="line2">Cliquez sur un bouton</div>
+            <div id="line1">INITIALISATION...</div>
+            <div id="line2">PRÊT ?</div>
         </div>
         <div id="btn-wrapper">
             <button class="btn-true" onclick="handleInput(true)">VRAI</button>
@@ -125,62 +158,51 @@
         </div>
     </div>
 
-    <div id="score-board">SCORE : <span id="score-val">0</span></div>
+    <div id="score-board">SCORE : <span id="score-val">000</span></div>
 
-    <!-- Modal Game Over -->
     <div id="modal-over" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="color:#d63031; font-family:'Orbitron'; margin:0;">GAME OVER</h2>
-            
+            <h2 style="color:var(--neon-pink); font-family:'Press Start 2P'; font-size: 1.2rem; margin-bottom:20px;">PARTIE FINIE</h2>
             <div class="recall-box">
-                <div id="recall-shape" style="width:40px; height:40px; margin: 0 auto 5px auto; border:1px solid #ddd;"></div>
-                <div id="recall-text" style="font-size:0.8rem; font-style:italic;"></div>
+                <div id="recall-shape" style="width:50px; height:50px; margin: 0 auto 10px auto; border:2px solid white;"></div>
+                <div id="recall-text" style="font-size:0.9rem; color: var(--neon-cyan);"></div>
                 <div id="error-reason" class="error-logic"></div>
             </div>
-
-            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.6rem; color:#7000ff; margin:10px 0;"></p>
-            <div id="modal-rank" style="font-weight:900; color:#0984e3; margin:5px 0; font-family:'Orbitron';"></div>
-            
+            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.7rem; color:white; margin:15px 0;"></p>
+            <div id="modal-rank" style="font-weight:900; color:var(--neon-pink); margin:10px 0; font-family:'Orbitron'; font-size: 1.2rem;"></div>
             <div id="name-prompt" style="display:none;">
-                <p style="font-size:0.8rem;">Record ! Ton prénom :</p>
-                <input type="text" id="player-name" maxlength="10" placeholder="NOM">
-                <button class="btn-true" style="width:100%" onclick="saveScore()">VALIDER</button>
+                <p style="font-family:'Orbitron'; color:var(--neon-cyan);">NOUVEAU RECORD !</p>
+                <input type="text" id="player-name" maxlength="10" placeholder="TON NOM">
+                <button class="btn-true" style="width:100%" onclick="saveScore()">ENREGISTRER</button>
             </div>
-
             <div id="post-game-btns">
-                <button style="background:#0984e3; width:100%; padding:12px; color:white; margin-top:10px; border:none; border-radius:5px; font-family:'Orbitron'; cursor:pointer;" onclick="restartGame()">REJOUER</button>
-                <button onclick="showHOF()" style="background:#fdcb6e; width:100%; padding:12px; color:#1a1a2e; margin-top:10px; border-radius:5px; font-family:'Orbitron'; font-weight:bold; border:none; cursor:pointer;">HALL OF FAME</button>
+                <button style="background:var(--neon-cyan); border:none; width:100%; padding:15px; color:black; margin-top:10px; border-radius:5px; font-family:'Orbitron'; font-weight:bold; cursor:pointer;" onclick="restartGame()">RÉESSAYER</button>
+                <button onclick="showHOF()" style="background:transparent; border: 2px solid var(--neon-purple); width:100%; padding:15px; color:var(--neon-purple); margin-top:10px; border-radius:5px; font-family:'Orbitron'; font-weight:bold; cursor:pointer;">CLASSEMENT</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Hall of Fame -->
     <div id="modal-hof" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-family:'Orbitron'; color:#7000ff; margin-top:0;">HALL OF FAME</h2>
-            <div style="overflow-x:auto;">
-                <table id="hof-table">
-                    <thead><tr><th>RANG</th><th>NOM</th><th>PTS</th><th>SEC</th></tr></thead>
-                    <tbody id="hof-body"></tbody>
-                </table>
-            </div>
-            <button class="btn-false" style="width:100%; margin-top:20px;" onclick="closeHOF()">FERMER</button>
+        <div class="modal-content" style="border-color: var(--neon-cyan);">
+            <h2 style="font-family:'Press Start 2P'; color:var(--neon-cyan); font-size: 1rem; margin-top:0;">TOP 10 PILOTES</h2>
+            <div style="overflow-x:auto;"><table id="hof-table"><thead><tr><th>RANG</th><th>NOM</th><th>PTS</th><th>SEC</th></tr></thead><tbody id="hof-body"></tbody></table></div>
+            <button class="btn-false" style="width:100%; margin-top:25px;" onclick="closeHOF()">QUITTER</button>
         </div>
     </div>
 
     <script>
         const shapes = ['carré', 'cercle'];
-        const colors = [{name:'bleu', hex:'#0984e3'}, {name:'rouge', hex:'#d63031'}, {name:'jaune', hex:'#f1c40f'}];
-        let currentScore = 0, isCorrect = false, lastReal = {}, startTime, timerInterval, gameActive = false;
-        let lastFullStatement = "";
+        const colors = [{name:'bleu', hex:'#00f2ff'}, {name:'rouge', hex:'#ff003c'}, {name:'jaune', hex:'#ffff00'}];
+        let currentScore = 0, isCorrect = false, lastReal = {}, startTime, timerInterval, gameActive = false, lastFullStatement = "";
 
-        function updateTimer() {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById('timer-display').innerText = `${elapsed}s`;
-        }
-
-        function getAppreciation(s) {
-            if (s < 10) return "Archi NUL"; if (s < 20) return "Pas terrible"; if (s < 35) return "Pas mal"; return "LE BOSS !";
+        function updateTimer() { document.getElementById('timer-display').innerText = `${Math.floor((Date.now() - startTime) / 1000).toString().padStart(2, '0')}s`; }
+        
+        // Rétablissement de tes catégories de notation
+        function getAppreciation(s) { 
+            if (s < 10) return "Archi NUL"; 
+            if (s < 20) return "Pas terrible"; 
+            if (s < 35) return "Pas mal"; 
+            return "LE BOSS !"; 
         }
 
         function generate() {
@@ -189,51 +211,49 @@
             const d = document.getElementById('target-shape');
             d.className = 'shape ' + (lastReal.shape === 'carré' ? 'square' : 'circle');
             d.style.backgroundColor = lastReal.color.hex;
+            d.style.boxShadow = `0 0 20px ${lastReal.color.hex}`;
 
             const type = Math.floor(Math.random() * 3);
             let l1 = "", l2 = "";
             if (type === 0) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = (s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci est un"; l2 = `${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
+                l1 = "C'EST UN"; l2 = `${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
             } else if (type === 1) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = !(s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci n'est pas"; l2 = `un ${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
+                l1 = "CE N'EST PAS"; l2 = `UN ${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
             } else {
                 const s1 = shapes[Math.floor(Math.random()*2)], c1 = colors[Math.floor(Math.random()*3)];
                 const s2 = shapes[Math.floor(Math.random()*2)], c2 = colors[Math.floor(Math.random()*3)];
                 isCorrect = (!(s1 === lastReal.shape && c1.name === lastReal.color.name) && !(s2 === lastReal.shape && c2.name === lastReal.color.name));
-                l1 = `Ni un ${s1} <span class="color-text">${c1.name}</span>`; l2 = `ou un ${s2} <span class="color-text">${c2.name}</span>`;
+                l1 = `NI UN ${s1} <span class="color-text" style="color:${c1.hex}">${c1.name}</span>`; 
+                l2 = `NI UN ${s2} <span class="color-text" style="color:${c2.hex}">${c2.name}</span>`;
             }
             document.getElementById('line1').innerHTML = l1; 
             document.getElementById('line2').innerHTML = l2;
-            lastFullStatement = l1 + " " + l2.replace(/<[^>]*>/g, ""); // On garde le texte brut pour le rappel
+            
+            // FIX BUG image_2.png : On utilise .innerText pour récupérer le texte propre sans HTML
+            lastFullStatement = document.getElementById('line1').innerText + " " + document.getElementById('line2').innerText;
+            
             document.getElementById('btn-wrapper').style.flexDirection = Math.random() > 0.5 ? 'row' : 'row-reverse';
         }
 
         function handleInput(choice) {
-            if (choice === isCorrect) { currentScore++; document.getElementById('score-val').innerText = currentScore; generate(); } 
+            if (choice === isCorrect) { currentScore++; document.getElementById('score-val').innerText = currentScore.toString().padStart(3, '0'); generate(); } 
             else { gameOver(choice); }
         }
 
         function gameOver(userChoice) {
             gameActive = false; clearInterval(timerInterval);
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
-            
-            // Rappel de l'objet
             const rShape = document.getElementById('recall-shape');
             rShape.className = (lastReal.shape === 'carré' ? 'square' : 'circle');
             rShape.style.backgroundColor = lastReal.color.hex;
-            rShape.style.width = "40px"; rShape.style.height = "40px";
             
-            // Rappel de la question et verdict
-            document.getElementById('recall-text').innerText = `Question : "${lastFullStatement}"`;
-            const correctText = isCorrect ? "VRAI" : "FAUX";
-            const userText = userChoice ? "VRAI" : "FAUX";
-            document.getElementById('error-reason').innerText = `Tu as cliqué sur ${userText} mais l'affirmation était ${correctText}.`;
-            
-            document.getElementById('final-stats').innerText = `SCORE: ${currentScore} | TEMPS: ${timeTaken}s`;
+            document.getElementById('recall-text').innerText = `ORDRE : "${lastFullStatement}"`;
+            document.getElementById('error-reason').innerText = `ERREUR : TU AS DIT ${userChoice ? "VRAI" : "FAUX"} ALORS QUE C'ÉTAIT ${isCorrect ? "VRAI" : "FAUX"}`;
+            document.getElementById('final-stats').innerText = `POINTS : ${currentScore} | TEMPS : ${timeTaken}s`;
             document.getElementById('modal-rank').innerText = getAppreciation(currentScore);
             
             if (currentScore > 15) { document.getElementById('name-prompt').style.display = 'block'; document.getElementById('post-game-btns').style.display = 'none'; }
@@ -242,7 +262,7 @@
         }
 
         function saveScore() {
-            const name = document.getElementById('player-name').value.toUpperCase().trim().substring(0, 10) || "PAT";
+            const name = document.getElementById('player-name').value.toUpperCase().trim().substring(0, 10) || "PILOTE";
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
             let scores = JSON.parse(localStorage.getItem('patHof')) || [];
             scores.push({ name, score: currentScore, time: timeTaken });
@@ -256,14 +276,12 @@
 
         function showHOF() {
             const scores = JSON.parse(localStorage.getItem('patHof')) || [];
-            document.getElementById('hof-body').innerHTML = scores.map((s, i) => `
-                <tr><td>#${i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.time}s</td></tr>
-            `).join('');
+            document.getElementById('hof-body').innerHTML = scores.map((s, i) => `<tr><td>#${i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.time}s</td></tr>`).join('');
             document.getElementById('modal-hof').style.display = 'flex';
         }
 
         function closeHOF() { document.getElementById('modal-hof').style.display = 'none'; }
-        function restartGame() { currentScore = 0; document.getElementById('score-val').innerText = "0"; document.getElementById('timer-display').innerText = "0s"; document.getElementById('modal-over').style.display = 'none'; document.getElementById('player-name').value = ""; generate(); }
+        function restartGame() { currentScore = 0; document.getElementById('score-val').innerText = "000"; document.getElementById('timer-display').innerText = "00s"; document.getElementById('modal-over').style.display = 'none'; document.getElementById('player-name').value = ""; generate(); }
         generate();
     </script>
 </body>
