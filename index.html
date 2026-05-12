@@ -13,17 +13,17 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: radial-gradient(circle at center, #1b1b3a 0%, #050510 100%);
             color: white;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        .header-container { text-align: center; margin-bottom: 10px; }
+        .header-container { text-align: center; margin-bottom: 10px; padding: 0 10px; }
         .retro-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
             font-weight: 900;
             text-transform: uppercase;
             color: white;
@@ -39,7 +39,8 @@
             border-radius: 10px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
             text-align: center;
-            width: 380px;
+            width: 90%;
+            max-width: 380px;
             color: #1a1a2e;
             position: relative;
         }
@@ -57,7 +58,7 @@
         .square { border-radius: 2px; }
         .circle { border-radius: 50%; }
 
-        #statement-container { height: 60px; font-size: 1rem; font-weight: 500; margin: 10px 0; }
+        #statement-container { min-height: 60px; font-size: 1rem; font-weight: 500; margin: 10px 0; }
         .color-text { font-weight: 900; text-transform: uppercase; }
 
         #btn-wrapper { display: flex; gap: 15px; width: 100%; }
@@ -75,26 +76,25 @@
             font-size: 0.7rem; color: #f0f; text-shadow: 0 0 5px #f0f;
         }
 
-        /* Modales */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; z-index: 100;
+            padding: 10px;
         }
         .modal-content {
-            background: white; padding: 25px; border-radius: 5px;
-            text-align: center; width: 340px; color: #1a1a2e; border: 3px solid #f0f;
+            background: white; padding: 20px; border-radius: 5px;
+            text-align: center; width: 100%; max-width: 360px; color: #1a1a2e; border: 3px solid #f0f;
+            max-height: 90vh; overflow-y: auto;
         }
 
-        /* Style Tableau HOF */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
-        th { border-bottom: 2px solid #7000ff; padding: 5px; font-family: 'Orbitron'; }
-        td { padding: 5px; border-bottom: 1px solid #eee; }
-        .highlight-row { background: #f0f0ff; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
+        th { border-bottom: 2px solid #7000ff; padding: 8px 4px; font-family: 'Orbitron'; }
+        td { padding: 8px 4px; border-bottom: 1px solid #eee; }
 
         input[type="text"] {
             width: 80%; padding: 10px; margin: 10px 0;
             border: 2px solid #0984e3; border-radius: 5px;
-            font-family: 'Orbitron'; text-align: center;
+            font-family: 'Orbitron'; text-align: center; font-size: 1rem;
         }
     </style>
 </head>
@@ -107,48 +107,48 @@
     <button class="btn-hof" onclick="showHOF()">🏆 HALL OF FAME</button>
 
     <div id="game-container">
-        <div id="timer-display">TEMPS: 0s</div>
+        <div id="timer-display">0s</div>
         <div id="shape-display"><div id="target-shape" class="shape"></div></div>
         <div id="statement-container">
             <div id="line1">Prêt ?</div>
             <div id="line2">Cliquez sur un bouton</div>
         </div>
         <div id="btn-wrapper">
-            <button id="btn-vrai" class="btn-true" onclick="handleInput(true)">VRAI</button>
-            <button id="btn-faux" class="btn-false" onclick="handleInput(false)">FAUX</button>
+            <button class="btn-true" onclick="handleInput(true)">VRAI</button>
+            <button class="btn-false" onclick="handleInput(false)">FAUX</button>
         </div>
     </div>
 
     <div id="score-board">SCORE : <span id="score-val">0</span></div>
 
-    <!-- Modal Game Over -->
     <div id="modal-over" class="modal-overlay">
         <div class="modal-content">
             <h2 style="color:#d63031; font-family:'Orbitron'; margin:0;">GAME OVER</h2>
-            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.7rem; color:#7000ff;"></p>
+            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.6rem; color:#7000ff; margin:15px 0;"></p>
             <div id="modal-rank" style="font-weight:900; color:#0984e3; margin:10px 0; font-family:'Orbitron';"></div>
             
             <div id="name-prompt" style="display:none;">
                 <p>Nouveau Record ! Ton prénom :</p>
-                <input type="text" id="player-name" maxlength="10" placeholder="MAX 10 CAR.">
+                <input type="text" id="player-name" maxlength="10" placeholder="NOM">
                 <button class="btn-true" style="width:100%" onclick="saveScore()">VALIDER</button>
             </div>
 
             <div id="post-game-btns">
-                <button class="btn-restart" style="background:#0984e3; width:100%; padding:12px; color:white; margin-top:10px;" onclick="restartGame()">REJOUER</button>
-                <button onclick="showHOF()" style="background:#fdcb6e; width:100%; padding:12px; color:#1a1a2e; margin-top:10px; border-radius:5px; font-family:'Orbitron'; font-weight:bold; border:none;">VOIR LE HALL OF FAME</button>
+                <button style="background:#0984e3; width:100%; padding:12px; color:white; margin-top:10px; border:none; border-radius:5px; font-family:'Orbitron'; cursor:pointer;" onclick="restartGame()">REJOUER</button>
+                <button onclick="showHOF()" style="background:#fdcb6e; width:100%; padding:12px; color:#1a1a2e; margin-top:10px; border-radius:5px; font-family:'Orbitron'; font-weight:bold; border:none; cursor:pointer;">HALL OF FAME</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Hall of Fame -->
     <div id="modal-hof" class="modal-overlay">
-        <div class="modal-content" style="width:380px;">
-            <h2 style="font-family:'Orbitron'; color:#7000ff;">HALL OF FAME</h2>
-            <table id="hof-table">
-                <thead><tr><th>RANG</th><th>NOM</th><th>SCORE</th><th>TEMPS</th></tr></thead>
-                <tbody id="hof-body"></tbody>
-            </table>
+        <div class="modal-content">
+            <h2 style="font-family:'Orbitron'; color:#7000ff; margin-top:0;">HALL OF FAME</h2>
+            <div style="overflow-x:auto;">
+                <table id="hof-table">
+                    <thead><tr><th>RANG</th><th>NOM</th><th>PTS</th><th>SEC</th></tr></thead>
+                    <tbody id="hof-body"></tbody>
+                </table>
+            </div>
             <button class="btn-false" style="width:100%; margin-top:20px;" onclick="closeHOF()">FERMER</button>
         </div>
     </div>
@@ -156,109 +156,65 @@
     <script>
         const shapes = ['carré', 'cercle'];
         const colors = [{name:'bleu', hex:'#0984e3'}, {name:'rouge', hex:'#d63031'}, {name:'jaune', hex:'#f1c40f'}];
-        
-        let currentScore = 0;
-        let isCorrect = false;
-        let lastReal = {};
-        let startTime, timerInterval;
-        let gameActive = false;
+        let currentScore = 0, isCorrect = false, lastReal = {}, startTime, timerInterval, gameActive = false;
 
         function updateTimer() {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById('timer-display').innerText = `TEMPS: ${elapsed}s`;
+            document.getElementById('timer-display').innerText = `${elapsed}s`;
         }
 
         function getAppreciation(s) {
-            if (s < 5) return "Archi NUL";
-            if (s < 10) return "super Nul";
-            if (s < 15) return "NUL";
-            if (s < 20) return "très moyen";
-            if (s < 25) return "moyen";
-            if (s < 30) return "Mouaif";
-            if (s < 35) return "pas mal";
-            if (s < 40) return "assez bien";
-            if (s < 45) return "bien";
-            if (s < 50) return "très bien";
-            return "AU TOP !!!";
+            if (s < 5) return "Archi NUL"; if (s < 15) return "NUL"; if (s < 30) return "Moyen"; if (s < 50) return "Bien !"; return "TOP !";
         }
 
         function generate() {
-            if(!gameActive) {
-                gameActive = true;
-                startTime = Date.now();
-                timerInterval = setInterval(updateTimer, 1000);
-            }
-            
+            if(!gameActive) { gameActive = true; startTime = Date.now(); timerInterval = setInterval(updateTimer, 1000); }
             lastReal = { shape: shapes[Math.floor(Math.random()*2)], color: colors[Math.floor(Math.random()*3)] };
             const d = document.getElementById('target-shape');
             d.className = 'shape ' + (lastReal.shape === 'carré' ? 'square' : 'circle');
             d.style.backgroundColor = lastReal.color.hex;
-
             const type = Math.floor(Math.random() * 3);
             let l1 = "", l2 = "";
-
             if (type === 0) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = (s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci est un";
-                l2 = `${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
+                l1 = "Ceci est un"; l2 = `${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
             } else if (type === 1) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = !(s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci n'est pas";
-                l2 = `un ${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
+                l1 = "Ceci n'est pas"; l2 = `un ${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
             } else {
                 const s1 = shapes[Math.floor(Math.random()*2)], c1 = colors[Math.floor(Math.random()*3)];
                 const s2 = shapes[Math.floor(Math.random()*2)], c2 = colors[Math.floor(Math.random()*3)];
                 isCorrect = (! (s1 === lastReal.shape && c1.name === lastReal.color.name) && !(s2 === lastReal.shape && c2.name === lastReal.color.name));
-                l1 = `Ni un ${s1} <span class="color-text">${c1.name}</span>`;
-                l2 = `ou un ${s2} <span class="color-text">${c2.name}</span>`;
+                l1 = `Ni un ${s1} <span class="color-text">${c1.name}</span>`; l2 = `ou un ${s2} <span class="color-text">${c2.name}</span>`;
             }
-
-            document.getElementById('line1').innerHTML = l1;
-            document.getElementById('line2').innerHTML = l2;
+            document.getElementById('line1').innerHTML = l1; document.getElementById('line2').innerHTML = l2;
             document.getElementById('btn-wrapper').style.flexDirection = Math.random() > 0.5 ? 'row' : 'row-reverse';
         }
 
         function handleInput(choice) {
-            if (choice === isCorrect) {
-                currentScore++;
-                document.getElementById('score-val').innerText = currentScore;
-                generate();
-            } else {
-                gameOver();
-            }
+            if (choice === isCorrect) { currentScore++; document.getElementById('score-val').innerText = currentScore; generate(); } 
+            else { gameOver(); }
         }
 
         function gameOver() {
-            gameActive = false;
-            clearInterval(timerInterval);
+            gameActive = false; clearInterval(timerInterval);
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
-            
             document.getElementById('final-stats').innerText = `SCORE: ${currentScore} | TEMPS: ${timeTaken}s`;
             document.getElementById('modal-rank').innerText = getAppreciation(currentScore);
-            
-            if (currentScore > 15) {
-                document.getElementById('name-prompt').style.display = 'block';
-                document.getElementById('post-game-btns').style.display = 'none';
-            } else {
-                document.getElementById('name-prompt').style.display = 'none';
-                document.getElementById('post-game-btns').style.display = 'block';
-            }
+            if (currentScore > 15) { document.getElementById('name-prompt').style.display = 'block'; document.getElementById('post-game-btns').style.display = 'none'; }
+            else { document.getElementById('name-prompt').style.display = 'none'; document.getElementById('post-game-btns').style.display = 'block'; }
             document.getElementById('modal-over').style.display = 'flex';
         }
 
         function saveScore() {
-            const name = document.getElementById('player-name').value.substring(0, 10) || "ANONYME";
+            const name = document.getElementById('player-name').value.toUpperCase().substring(0, 10) || "PAT";
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
-            
             let scores = JSON.parse(localStorage.getItem('patHof')) || [];
             scores.push({ name, score: currentScore, time: timeTaken });
-            
-            // Tri : Score décroissant, puis temps croissant
             scores.sort((a, b) => b.score - a.score || a.time - b.time);
             scores = scores.slice(0, 10);
-            
             localStorage.setItem('patHof', JSON.stringify(scores));
             document.getElementById('name-prompt').style.display = 'none';
             document.getElementById('post-game-btns').style.display = 'block';
@@ -267,24 +223,14 @@
 
         function showHOF() {
             const scores = JSON.parse(localStorage.getItem('patHof')) || [];
-            const body = document.getElementById('hof-body');
-            body.innerHTML = scores.map((s, i) => `
+            document.getElementById('hof-body').innerHTML = scores.map((s, i) => `
                 <tr><td>#${i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.time}s</td></tr>
             `).join('');
             document.getElementById('modal-hof').style.display = 'flex';
         }
 
         function closeHOF() { document.getElementById('modal-hof').style.display = 'none'; }
-
-        function restartGame() {
-            currentScore = 0;
-            document.getElementById('score-val').innerText = "0";
-            document.getElementById('timer-display').innerText = "TEMPS: 0s";
-            document.getElementById('modal-over').style.display = 'none';
-            document.getElementById('player-name').value = "";
-            generate();
-        }
-
+        function restartGame() { currentScore = 0; document.getElementById('score-val').innerText = "0"; document.getElementById('timer-display').innerText = "0s"; document.getElementById('modal-over').style.display = 'none'; document.getElementById('player-name').value = ""; generate(); }
         generate();
     </script>
 </body>
