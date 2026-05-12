@@ -54,7 +54,7 @@
             color: #d63031;
         }
 
-        .shape { width: 80px; height: 80px; margin: 10px auto; }
+        .shape { width: 80px; height: 80px; margin: 10px auto; border: 2px solid rgba(0,0,0,0.1); }
         .square { border-radius: 2px; }
         .circle { border-radius: 50%; }
 
@@ -83,10 +83,16 @@
         }
         .modal-content {
             background: white; padding: 20px; border-radius: 5px;
-            text-align: center; width: 100%; max-width: 360px; color: #1a1a2e; border: 3px solid #f0f;
-            max-height: 90vh; overflow-y: auto;
+            text-align: center; width: 100%; max-width: 380px; color: #1a1a2e; border: 3px solid #f0f;
+            max-height: 95vh; overflow-y: auto;
         }
 
+        /* Style Rappel Erreur */
+        .recall-box {
+            background: #f8f9fa; border: 1px dashed #ccc; padding: 10px; margin: 10px 0; border-radius: 5px;
+        }
+        .error-logic { color: #d63031; font-weight: bold; font-size: 0.85rem; margin-top: 5px; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
         th { border-bottom: 2px solid #7000ff; padding: 8px 4px; font-family: 'Orbitron'; }
         td { padding: 8px 4px; border-bottom: 1px solid #eee; }
@@ -96,7 +102,6 @@
             border: 2px solid #0984e3; border-radius: 5px;
             font-family: 'Orbitron'; text-align: center; font-size: 1rem;
         }
-        .error-msg { color: #d63031; font-weight: bold; margin: 10px 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -126,12 +131,18 @@
     <div id="modal-over" class="modal-overlay">
         <div class="modal-content">
             <h2 style="color:#d63031; font-family:'Orbitron'; margin:0;">GAME OVER</h2>
-            <div id="error-reason" class="error-msg"></div>
-            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.6rem; color:#7000ff; margin:15px 0;"></p>
-            <div id="modal-rank" style="font-weight:900; color:#0984e3; margin:10px 0; font-family:'Orbitron';"></div>
+            
+            <div class="recall-box">
+                <div id="recall-shape" style="width:40px; height:40px; margin: 0 auto 5px auto; border:1px solid #ddd;"></div>
+                <div id="recall-text" style="font-size:0.8rem; font-style:italic;"></div>
+                <div id="error-reason" class="error-logic"></div>
+            </div>
+
+            <p id="final-stats" style="font-family:'Press Start 2P'; font-size:0.6rem; color:#7000ff; margin:10px 0;"></p>
+            <div id="modal-rank" style="font-weight:900; color:#0984e3; margin:5px 0; font-family:'Orbitron';"></div>
             
             <div id="name-prompt" style="display:none;">
-                <p>Nouveau Record (>15) ! Ton prénom :</p>
+                <p style="font-size:0.8rem;">Record ! Ton prénom :</p>
                 <input type="text" id="player-name" maxlength="10" placeholder="NOM">
                 <button class="btn-true" style="width:100%" onclick="saveScore()">VALIDER</button>
             </div>
@@ -161,6 +172,7 @@
         const shapes = ['carré', 'cercle'];
         const colors = [{name:'bleu', hex:'#0984e3'}, {name:'rouge', hex:'#d63031'}, {name:'jaune', hex:'#f1c40f'}];
         let currentScore = 0, isCorrect = false, lastReal = {}, startTime, timerInterval, gameActive = false;
+        let lastFullStatement = "";
 
         function updateTimer() {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
@@ -168,7 +180,7 @@
         }
 
         function getAppreciation(s) {
-            if (s < 5) return "Archi NUL"; if (s < 15) return "NUL"; if (s < 30) return "Moyen"; if (s < 50) return "Bien !"; return "TOP !";
+            if (s < 10) return "Archi NUL"; if (s < 20) return "Pas terrible"; if (s < 35) return "Pas mal"; return "LE BOSS !";
         }
 
         function generate() {
@@ -177,23 +189,26 @@
             const d = document.getElementById('target-shape');
             d.className = 'shape ' + (lastReal.shape === 'carré' ? 'square' : 'circle');
             d.style.backgroundColor = lastReal.color.hex;
+
             const type = Math.floor(Math.random() * 3);
             let l1 = "", l2 = "";
             if (type === 0) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = (s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci est un"; l2 = `${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
+                l1 = "Ceci est un"; l2 = `${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
             } else if (type === 1) {
                 const s = shapes[Math.floor(Math.random()*2)], c = colors[Math.floor(Math.random()*3)];
                 isCorrect = !(s === lastReal.shape && c.name === lastReal.color.name);
-                l1 = "Ceci n'est pas"; l2 = `un ${s} <span class="color-text" style="color:${colors[Math.floor(Math.random()*3)].hex}">${c.name}</span>`;
+                l1 = "Ceci n'est pas"; l2 = `un ${s} <span class="color-text" style="color:${c.hex}">${c.name}</span>`;
             } else {
                 const s1 = shapes[Math.floor(Math.random()*2)], c1 = colors[Math.floor(Math.random()*3)];
                 const s2 = shapes[Math.floor(Math.random()*2)], c2 = colors[Math.floor(Math.random()*3)];
-                isCorrect = (! (s1 === lastReal.shape && c1.name === lastReal.color.name) && !(s2 === lastReal.shape && c2.name === lastReal.color.name));
+                isCorrect = (!(s1 === lastReal.shape && c1.name === lastReal.color.name) && !(s2 === lastReal.shape && c2.name === lastReal.color.name));
                 l1 = `Ni un ${s1} <span class="color-text">${c1.name}</span>`; l2 = `ou un ${s2} <span class="color-text">${c2.name}</span>`;
             }
-            document.getElementById('line1').innerHTML = l1; document.getElementById('line2').innerHTML = l2;
+            document.getElementById('line1').innerHTML = l1; 
+            document.getElementById('line2').innerHTML = l2;
+            lastFullStatement = l1 + " " + l2.replace(/<[^>]*>/g, ""); // On garde le texte brut pour le rappel
             document.getElementById('btn-wrapper').style.flexDirection = Math.random() > 0.5 ? 'row' : 'row-reverse';
         }
 
@@ -206,27 +221,28 @@
             gameActive = false; clearInterval(timerInterval);
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
             
-            // Message d'anti-frustration
+            // Rappel de l'objet
+            const rShape = document.getElementById('recall-shape');
+            rShape.className = (lastReal.shape === 'carré' ? 'square' : 'circle');
+            rShape.style.backgroundColor = lastReal.color.hex;
+            rShape.style.width = "40px"; rShape.style.height = "40px";
+            
+            // Rappel de la question et verdict
+            document.getElementById('recall-text').innerText = `Question : "${lastFullStatement}"`;
             const correctText = isCorrect ? "VRAI" : "FAUX";
             const userText = userChoice ? "VRAI" : "FAUX";
-            document.getElementById('error-reason').innerText = `Perdu ! Tu as dit ${userText} alors que c'était ${correctText}.`;
+            document.getElementById('error-reason').innerText = `Tu as cliqué sur ${userText} mais l'affirmation était ${correctText}.`;
             
             document.getElementById('final-stats').innerText = `SCORE: ${currentScore} | TEMPS: ${timeTaken}s`;
             document.getElementById('modal-rank').innerText = getAppreciation(currentScore);
             
-            if (currentScore > 15) { 
-                document.getElementById('name-prompt').style.display = 'block'; 
-                document.getElementById('post-game-btns').style.display = 'none'; 
-            } else { 
-                document.getElementById('name-prompt').style.display = 'none'; 
-                document.getElementById('post-game-btns').style.display = 'block'; 
-            }
+            if (currentScore > 15) { document.getElementById('name-prompt').style.display = 'block'; document.getElementById('post-game-btns').style.display = 'none'; }
+            else { document.getElementById('name-prompt').style.display = 'none'; document.getElementById('post-game-btns').style.display = 'block'; }
             document.getElementById('modal-over').style.display = 'flex';
         }
 
         function saveScore() {
-            const nameInput = document.getElementById('player-name').value.toUpperCase().trim();
-            const name = nameInput.substring(0, 10) || "PAT";
+            const name = document.getElementById('player-name').value.toUpperCase().trim().substring(0, 10) || "PAT";
             const timeTaken = Math.floor((Date.now() - startTime) / 1000);
             let scores = JSON.parse(localStorage.getItem('patHof')) || [];
             scores.push({ name, score: currentScore, time: timeTaken });
